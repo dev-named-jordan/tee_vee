@@ -10,10 +10,10 @@ class NetworkTest < Minitest::Test
     @nbc = Network.new("NBC")
     @michael_knight = Character.new({name: "Michael Knight", actor: "David Hasselhoff", salary: 1_600_000})
     @kitt = Character.new({name: "KITT", actor: "William Daniels", salary: 1_000_000})
-    @knight_rider = Show.new("Knight Rider", "Glen Larson", [michael_knight, kitt])
+    @knight_rider = Show.new("Knight Rider", "Glen Larson", [@michael_knight, @kitt])
     @leslie_knope = Character.new({name: "Leslie Knope", actor: "Amy Poehler", salary: 2_000_000})
     @ron_swanson = Character.new({name: "Ron Swanson", actor: "Nick Offerman", salary: 1_400_000})
-    @parks_and_rec = Show.new("Parks and Recreation", "Michael Shur & Greg Daniels", [leslie_knope, ron_swanson])
+    @parks_and_rec = Show.new("Parks and Recreation", "Michael Shur & Greg Daniels", [@leslie_knope, @ron_swanson])
   end
 
   def test_it_exists_and_has_attributes
@@ -28,19 +28,23 @@ class NetworkTest < Minitest::Test
 
     assert_equal [@knight_rider, @parks_and_rec], @nbc.shows
   end
+
+  def test_main_characters
+    @nbc.add_show(@knight_rider)
+    @nbc.add_show(@parks_and_rec)
+
+    assert_equal [@kitt], @nbc.main_characters
+  end
+
+  def test_actors_by_show
+    @nbc.add_show(@knight_rider)
+    @nbc.add_show(@parks_and_rec)
+
+    expected = {
+                @knight_rider => ["David Hasselhoff", "William Daniels"],
+                @parks_and_rec => ["Amy Poehler", "Nick Offerman"]
+              }
+
+    assert_equal expected, @nbc.actors_by_show
+  end
 end
-
-# Use TDD to create a Network class that responds to the following
-# interaction pattern. A character is a main character for the network
-# if their salary is greater than 500_000 and their character name has
-#   no lowercase letters.
-
-
-#  nbc.main_characters
-# # => [#<Character:0x00007f98a4ba8dc8...>]
-#
-#  nbc.actors_by_show
-# # => {
-#       #<Show:0x00007fe5f8398970...> => ["David Hasselhoff", "William Daniels"],
-#       #<Show:0x00007fe5f88b0a20...> => ["Amy Poehler", "Nick Offerman"]
-# #    }
