@@ -18,18 +18,17 @@ class Network
     end
     main_character
   end
-
+#below method not finished in time
   def actors_by_show
-  show_stuff = {}
-  show_actors = []
+  show_stuff = Hash.new { |hash, key| hash[key] = []}
   @shows.each do |show|
       show.characters.each do |show_data|
-        show_actors << show_data.actor
         if show_stuff[show] == {}
-          show_stuff[show] = show_data.actor
+          show_stuff[show] = [show_data.actor]
         else
-          show_stuff[show] = show_actors.flatten
+          show_stuff[show] << [show_data.actor]
         end
+        show_stuff[show].flatten!
       end
     end
     show_stuff
